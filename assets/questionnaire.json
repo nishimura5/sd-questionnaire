@@ -1,0 +1,29 @@
+{
+  "stimuli": [
+  ],
+  "load_all_glbs": true,
+  "points": 7,
+  "adjective_pairs": [
+	["暖かい", "冷たい"],
+	["好き", "嫌い"],
+	["軽い", "重い"],
+	["豪華な", "素朴な"],
+	["活発な", "落ち着いた"],
+	["柔らかい", "硬い"],
+	["控えめな", "積極的な"],
+	["熱い", "冷たい"],
+	["明るい", "暗い"],
+	["静かな", "賑やかな"],
+	["滑らかな", "ざらざらした"],
+	["自然な", "人工的な"],
+	["快適な", "不快な"],
+	["新しい", "古い"],
+	["面白い", "つまらない"]
+  ],
+  "randomise":{
+	"stimuli": true,
+	"adjective_pairs": true
+  },
+  "csv_file_name": "questionnaire_results.csv",
+  "csv_output_directory": "Desktop"
+}

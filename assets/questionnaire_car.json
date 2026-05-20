@@ -1,0 +1,48 @@
+{
+  "stimuli": [
+	{
+	  "id": "s_001",
+	  "description": "car1",
+	  "file_name": "kenney_car/van.glb"
+	},
+	{
+	  "id": "s_002",
+	  "description": "car2",
+	  "file_name": "kenney_car/race-future.glb"
+	},
+	{
+	  "id": "s_003",
+	  "description": "car3",
+	  "file_name": "kenney_car/sedan-sports.glb"
+	},
+	{
+	  "id": "s_004",
+	  "description": "car4",
+	  "file_name": "kenney_car/sedan.glb"
+	},
+	{
+	  "id": "s_005",
+	  "description": "car5",
+	  "file_name": "kenney_car/suv.glb"
+	}
+  ],
+  "load_all_glbs": false,
+  "points": 7,
+  "adjective_pairs": [
+	["はやい", "おそい"],
+	["たかい", "やすい"],
+	["じょうぶ", "よわい"],
+	["でこぼこみち", "きれいなみち"],
+	["すき", "きらい"],
+	["おしゃれ", "ださい"],
+	["かっこいい", "かわいい"],
+	["じつよう", "しゅみ"],
+	["ちょうきょり", "たんきょり"]
+  ],
+  "randomise":{
+	"stimuli": true,
+	"adjective_pairs": true
+  },
+  "csv_file_name": "questionnaire_results.csv",
+  "csv_output_directory": "Desktop"
+}

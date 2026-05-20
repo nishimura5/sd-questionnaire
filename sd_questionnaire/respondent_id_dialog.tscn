@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://d2pv16da6d4jh"]
+
+[ext_resource type="Script" path="res://sd_questionnaire/respondent_id_dialog.gd" id="1_xkrhc"]
+
+[node name="RespondentIdDialog" type="CanvasLayer"]
+script = ExtResource("1_xkrhc")

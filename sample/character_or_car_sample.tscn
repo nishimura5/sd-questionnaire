@@ -1,0 +1,178 @@
+[gd_scene format=3 uid="uid://db4fbps58ow28"]
+
+[ext_resource type="Script" uid="uid://c37d5nyjqb3yt" path="res://sample/character_or_car_sample.gd" id="1_ppywg"]
+[ext_resource type="Script" uid="uid://k01p0uwdhjk" path="res://sd_questionnaire/questionnaire_screen_dialog.gd" id="2_manvt"]
+[ext_resource type="PackedScene" path="res://sd_questionnaire/questionnaire_panel.tscn" id="3_3inil"]
+[ext_resource type="Script" uid="uid://dfx4h86t7sj13" path="res://sd_questionnaire/respondent_id_screen_dialog.gd" id="4_44cpo"]
+[ext_resource type="PackedScene" path="res://sd_questionnaire/respondent_id_panel.tscn" id="5_8hq4b"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6qvke"]
+sky_top_color = Color(0.012, 0.017, 0.032, 1)
+sky_horizon_color = Color(0.11, 0.15, 0.24, 1)
+sky_curve = 0.22
+sky_energy_multiplier = 0.72
+ground_bottom_color = Color(0.005, 0.006, 0.009, 1)
+ground_horizon_color = Color(0.025, 0.032, 0.05, 1)
+ground_curve = 0.18
+ground_energy_multiplier = 0.32
+sun_angle_max = 9.0
+sun_curve = 0.08
+energy_multiplier = 0.8
+
+[sub_resource type="Sky" id="Sky_xg4a8"]
+sky_material = SubResource("ProceduralSkyMaterial_6qvke")
+
+[sub_resource type="Environment" id="Environment_n8ygo"]
+background_mode = 2
+background_color = Color(0.94, 0.95, 0.98, 1)
+background_energy_multiplier = 0.72
+sky = SubResource("Sky_xg4a8")
+ambient_light_source = 3
+ambient_light_color = Color(0.4, 0.4, 0.38, 1)
+ambient_light_sky_contribution = 0.38
+ambient_light_energy = 0.22
+reflected_light_source = 2
+tonemap_mode = 4
+tonemap_agx_white = 8.5
+tonemap_agx_contrast = 1.1
+ssr_enabled = true
+ssr_max_steps = 96
+ssr_fade_in = 0.08
+ssr_fade_out = 1.2
+ssao_enabled = true
+ssao_radius = 2.2
+ssao_intensity = 1.2
+ssao_power = 1.25
+ssao_detail = 0.72
+ssil_enabled = true
+ssil_radius = 3.5
+ssil_intensity = 0.35
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
+sdfgi_bounce_feedback = 0.42
+sdfgi_energy = 0.82
+glow_enabled = true
+glow_levels/2 = 0.3
+glow_levels/3 = 0.15
+glow_levels/4 = 0.05
+glow_intensity = 0.08
+glow_strength = 0.3
+glow_hdr_threshold = 0.86
+glow_hdr_scale = 1.65
+fog_enabled = true
+fog_light_color = Color(0.22, 0.22, 0.2, 1)
+fog_light_energy = 0.35
+fog_sun_scatter = 0.22
+fog_density = 0.018
+fog_height_density = 0.045
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.012
+volumetric_fog_albedo = Color(0.73, 0.73, 0.7, 1)
+volumetric_fog_emission = Color(0.032, 0.032, 0.03, 1)
+volumetric_fog_emission_energy = 0.18
+volumetric_fog_anisotropy = 0.38
+volumetric_fog_length = 32.0
+volumetric_fog_sky_affect = 0.35
+adjustment_enabled = true
+adjustment_brightness = 0.98
+adjustment_saturation = 1.08
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_e8t3v"]
+exposure_multiplier = 1.45
+auto_exposure_scale = 0.28
+auto_exposure_speed = 0.8
+dof_blur_far_enabled = true
+dof_blur_far_distance = 5.2
+dof_blur_far_transition = 3.5
+dof_blur_amount = 0.045
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4yq1s"]
+albedo_color = Color(0.02, 0.02, 0.02, 1)
+metallic_specular = 0.7
+roughness = 0.34
+clearcoat_enabled = true
+clearcoat = 0.35
+clearcoat_roughness = 0.22
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5p0uf"]
+size = Vector2(8, 8)
+
+[node name="SimpleScene" type="Node3D" unique_id=2120542019]
+script = ExtResource("1_ppywg")
+questionnaire_json_path = "res://assets/questionnaire_car.json"
+
+[node name="MainCamera" type="Camera3D" parent="." unique_id=1834873271]
+transform = Transform3D(1, 0, 0, 0, 0.9937679, 0.11146893, 0, -0.11146893, 0.9937679, 1.8794749, 1.6950791, 4.077236)
+fov = 58.0
+
+[node name="SunLight" type="DirectionalLight3D" parent="." unique_id=1534837616]
+transform = Transform3D(0.8660253, -8.881784e-16, -0.5000002, -0.32139412, 0.7660441, -0.5566708, 0.38302216, 0.64278805, 0.6634136, 1.4485568, 3, 1.0200716)
+shadow_bias = 0.04
+shadow_blur = 2.0
+directional_shadow_blend_splits = true
+directional_shadow_fade_start = 0.92
+directional_shadow_max_distance = 18.0
+
+[node name="CinematicKeyLight" type="SpotLight3D" parent="." unique_id=1561669343]
+transform = Transform3D(0.5811225, 2.5786261e-05, -0.81381613, -0.465538, 0.820234, -0.33240125, 0.66751105, 0.57202816, 0.47666845, -5.2944193, 2.3081315, 3.068199)
+light_energy = 3.469
+shadow_enabled = true
+shadow_bias = 0.035
+shadow_blur = 2.4
+spot_range = 8.0
+spot_attenuation = 0.55
+spot_angle = 34.0
+spot_angle_attenuation = 1.4
+
+[node name="CinematicRimLight" type="SpotLight3D" parent="." unique_id=1561669344]
+transform = Transform3D(-0.536613, 0.22685124, 0.8127638, 0.42759815, 0.9034661, 0.030146927, -0.7274657, 0.36371356, -0.5818128, 5.249012, 1.7872396, -2.4)
+light_energy = 1.321
+shadow_enabled = true
+shadow_bias = 0.045
+shadow_blur = 3.0
+spot_range = 7.0
+spot_attenuation = 0.5
+spot_angle = 29.96715
+spot_angle_attenuation = 1.8
+
+[node name="LowCoolAccent" type="OmniLight3D" parent="." unique_id=1561669345]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7720718, 2.4377537, 2.2373724)
+light_energy = 2.225
+omni_range = 4.2
+omni_attenuation = 0.75
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2089022421]
+environment = SubResource("Environment_n8ygo")
+camera_attributes = SubResource("CameraAttributesPractical_e8t3v")
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=1424404299]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_4yq1s")
+mesh = SubResource("PlaneMesh_5p0uf")
+
+[node name="ModelRoot" type="Node3D" parent="." unique_id=108829264]
+
+[node name="QuestionnaireScreenDialog" type="CanvasLayer" parent="." unique_id=493084084]
+script = ExtResource("2_manvt")
+panel_position = 1
+margin_px = 4
+
+[node name="QuestionnairePanel" parent="QuestionnaireScreenDialog" unique_id=2007949212 instance=ExtResource("3_3inil")]
+visible = false
+content_margin_px = 6
+label_width_px = 190
+option_separation_px = 2
+option_circle_outline_color = Color(0.8627451, 0.9019608, 0.9411765, 1)
+option_circle_selected_color = Color(0.8627451, 0.9019608, 0.9411765, 1)
+scrollbar_width_px = 20
+scrollbar_corner_radius_px = 4
+scrollbar_track_color = Color(0.12773255, 0.1624285, 0.18488184, 0.8509804)
+scrollbar_grabber_color = Color(0.8627451, 0.9019608, 0.9411765, 1)
+label_font_size = 28
+submit_button_font_size = 28
+
+[node name="RespondentIdScreenDialog" type="CanvasLayer" parent="." unique_id=221567892]
+script = ExtResource("4_44cpo")
+
+[node name="RespondentIdPanel" parent="RespondentIdScreenDialog" unique_id=217015906 instance=ExtResource("5_8hq4b")]
+visible = false

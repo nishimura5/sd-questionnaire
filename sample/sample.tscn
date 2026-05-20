@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dx6hxx4ja818g"]
+
+[ext_resource type="Script" uid="uid://chp525l2r3w38" path="res://sample/sample.gd" id="1_3k5ql"]
+[ext_resource type="Script" uid="uid://k01p0uwdhjk" path="res://sd_questionnaire/questionnaire_screen_dialog.gd" id="2_q6wns"]
+[ext_resource type="Script" uid="uid://dfx4h86t7sj13" path="res://sd_questionnaire/respondent_id_screen_dialog.gd" id="3_k75uc"]
+
+[node name="Sample" type="Node3D" unique_id=1926187204]
+script = ExtResource("1_3k5ql")
+
+[node name="MainCamera" type="Camera3D" parent="." unique_id=367262806]
+transform = Transform3D(1, 0, 0, 0, 0.9522894, 0.30519658, 0, -0.30519658, 0.9522894, 1.8288879, 1.757823, 4.25)
+current = true
+fov = 55.0
+
+[node name="ModelRoot" type="Node3D" parent="." unique_id=2064345148]
+
+[node name="QuestionnaireScreenDialog" type="CanvasLayer" parent="." unique_id=1952879252]
+script = ExtResource("2_q6wns")
+panel_position = 1
+margin_px = 8
+
+[node name="RespondentIdScreenDialog" type="CanvasLayer" parent="." unique_id=1748841942]
+script = ExtResource("3_k75uc")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1993862074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.125205, 0)
+light_energy = 1.81
+light_size = 0.09
