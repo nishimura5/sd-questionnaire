@@ -97,7 +97,7 @@ clearcoat_roughness = 0.22
 [sub_resource type="PlaneMesh" id="PlaneMesh_5p0uf"]
 size = Vector2(8, 8)
 
-[node name="SimpleScene" type="Node3D" unique_id=2120542019]
+[node name="CharacterCarSample" type="Node3D" unique_id=2120542019]
 script = ExtResource("1_ppywg")
 questionnaire_json_path = "res://assets/questionnaire_car.json"
 
