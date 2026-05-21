@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://chp525l2r3w38" path="res://sample/sample.gd" id="1_3k5ql"]
 [ext_resource type="Script" uid="uid://k01p0uwdhjk" path="res://sd_questionnaire/questionnaire_screen_dialog.gd" id="2_q6wns"]
 [ext_resource type="Script" uid="uid://dfx4h86t7sj13" path="res://sd_questionnaire/respondent_id_screen_dialog.gd" id="3_k75uc"]
+[ext_resource type="PackedScene" path="res://sd_questionnaire/questionnaire_panel.tscn" id="4_4o43f"]
+[ext_resource type="PackedScene" path="res://sd_questionnaire/respondent_id_panel.tscn" id="5_5ynax"]
 
 [node name="Sample" type="Node3D" unique_id=1926187204]
 script = ExtResource("1_3k5ql")
@@ -19,8 +21,25 @@ script = ExtResource("2_q6wns")
 panel_position = 1
 margin_px = 8
 
+[node name="QuestionnairePanel" parent="QuestionnaireScreenDialog" instance=ExtResource("4_4o43f")]
+visible = false
+content_margin_px = 6
+label_width_px = 190
+option_separation_px = 2
+option_circle_outline_color = Color(0.8627451, 0.9019608, 0.9411765, 1)
+option_circle_selected_color = Color(0.8627451, 0.9019608, 0.9411765, 1)
+scrollbar_width_px = 20
+scrollbar_corner_radius_px = 4
+scrollbar_track_color = Color(0.12773255, 0.1624285, 0.18488184, 0.8509804)
+scrollbar_grabber_color = Color(0.8627451, 0.9019608, 0.9411765, 1)
+label_font_size = 28
+submit_button_font_size = 28
+
 [node name="RespondentIdScreenDialog" type="CanvasLayer" parent="." unique_id=1748841942]
 script = ExtResource("3_k75uc")
+
+[node name="RespondentIdPanel" parent="RespondentIdScreenDialog" instance=ExtResource("5_5ynax")]
+visible = false
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1993862074]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.125205, 0)
