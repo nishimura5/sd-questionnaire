@@ -13,6 +13,8 @@ GodotでSD法質問紙のデモを実行するためのサンプルプロジェ�
 3. 回答者IDを入力すると、3DモデルとSD法質問紙が表示されます。
 4. すべての刺激に回答すると、回答結果がCSVに出力されます。
 
+![キャプチャ画面](docs/sd_questionnaire_cap.webp)
+
 ## character_or_car_sample.tscn
 
 `sample/character_or_car_sample.tscn`は、キャラクターまたは車の3Dモデルを刺激として表示しながらSD法質問紙に回答するためのサンプルシーンです。初期設定では`assets/questionnaire_car.json`を読み込み、`assets/kenney_car`内の車モデルを順番に表示します。
