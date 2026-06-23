@@ -1,7 +1,6 @@
 extends Node3D
 
 const DEFAULT_QUESTIONNAIRE_JSON_PATH := "res://assets/questionnaire.json"
-const STIMULUS_BASE_DIR := "res://assets"
 const DEFAULT_CAMERA_HEIGHT_M := 1.5
 const CHARACTER_CAMERA_HEIGHT_M := 1.7
 const CAR_CAMERA_HEIGHT_M := 1.07
@@ -105,14 +104,16 @@ func _show_stimulus(index: int) -> void:
         push_warning("stimuli.file_name が空です。")
         return
 
-    var full_path := "%s/%s" % [STIMULUS_BASE_DIR.trim_suffix("/"), file_name]
-    var resource = load(full_path)
-    if resource is PackedScene:
-        _current_model = (resource as PackedScene).instantiate()
+    var full_path := StimulusModelLoader.resolve_path(file_name, _spec.stimulus_root_dir)
+    var instance := StimulusModelLoader.instantiate(file_name, _spec.stimulus_root_dir)
+    if instance is Node3D:
+        _current_model = instance
         _model_root.add_child(_current_model)
         _prepare_model_for_cinematic_lighting(_current_model)
         _orbit_angle = 0.0
     else:
+        if instance != null:
+            instance.queue_free()
         push_warning("モデルを読み込めません: %s" % full_path)
 
 

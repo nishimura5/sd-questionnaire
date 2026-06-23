@@ -3,6 +3,7 @@ class_name QuestionnaireSpec
 extends RefCounted
 
 var stimuli: Array = []
+var stimulus_root_dir: String = "res://assets"
 var points: int = 7
 var adjective_pairs: Array = []
 var randomise_stimuli: bool = false

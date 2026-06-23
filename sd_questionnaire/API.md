@@ -11,6 +11,7 @@
 
 ```json
 {
+  "root_dir": "~/Desktop",
   "stimuli": [
     {
       "id": "optional_unique_id",
@@ -36,10 +37,12 @@
 ### 備考
 
 - `points` は `5` または `7`。
+- `root_dir` は省略可能です。指定した場合、`stimuli[].file_name` と `load_all_glbs` はそのディレクトリを起点にGLBを探します。`~/Desktop` のような表記も受け付けます。
+- `root_dir` 未指定時は従来通り `res://assets` を起点にGLBを探します。
 - `stimuli[].file_name` は必須。
 - `stimuli[].description` は省略可能です。window に表示される刺激名は `description` ではなく `id` です。
 - `stimuli[].id` が未指定の場合は `file_name` の basename から自動補完。
-- `load_all_glbs` が `true` の場合、JSON と同じフォルダ内のすべての `.glb` を読み込み対象に追加します。
+- `load_all_glbs` が `true` の場合、`root_dir` または `res://assets` 直下のすべての `.glb` を読み込み対象に追加します。
 - `stimuli` で未定義の GLB には、ファイル名昇順で `sti_001`, `sti_002`, ... の `id` を付与します。
 - `stimuli` で定義済みの `id` と自動付与された `id` が重複した場合は `Duplicated id. Check json` エラーになります。
 - `adjective_pairs` は配列形式 `[left, right]` とオブジェクト形式 `{left, right, id}` を混在可能。

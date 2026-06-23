@@ -1,6 +1,6 @@
 extends Node3D
 
-const QUESTIONNAIRE_JSON_PATH := "res://assets/questionnaire.json"
+const QUESTIONNAIRE_JSON_PATH := "res://assets/questionnaire_desktop.json"
 
 @onready var _model_root: Node3D = $ModelRoot
 @onready var _questionnaire_screen_dialog: QuestionnaireScreenDialog = $QuestionnaireScreenDialog

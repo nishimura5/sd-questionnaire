@@ -2,6 +2,8 @@
 class_name QuestionnaireLoader
 extends RefCounted
 
+const DEFAULT_STIMULUS_ROOT_DIR := "res://assets"
+
 static func load_from_file(path: String) -> QuestionnaireSpec:
 	if not FileAccess.file_exists(path):
 		push_error("JSON が見つかりません: %s" % path)
@@ -21,10 +23,13 @@ static func load_from_file(path: String) -> QuestionnaireSpec:
 
 	var spec := QuestionnaireSpec.new()
 
+	if not _parse_root_dir(data, spec):
+		return null
+
 	if not _parse_points(data, spec):
 		return null
 
-	if not _parse_stimuli(data, spec, path):
+	if not _parse_stimuli(data, spec):
 		return null
 
 	if not _parse_adjective_pairs(data, spec):
@@ -50,7 +55,25 @@ static func _parse_points(data: Dictionary, spec: QuestionnaireSpec) -> bool:
 	return true
 
 
-static func _parse_stimuli(data: Dictionary, spec: QuestionnaireSpec, json_path: String) -> bool:
+static func _parse_root_dir(data: Dictionary, spec: QuestionnaireSpec) -> bool:
+	if not data.has("root_dir"):
+		spec.stimulus_root_dir = DEFAULT_STIMULUS_ROOT_DIR
+		return true
+
+	if typeof(data["root_dir"]) != TYPE_STRING:
+		push_error("root_dir は string で定義してください。")
+		return false
+
+	var root_dir := str(data["root_dir"]).strip_edges()
+	if root_dir.is_empty():
+		push_error("root_dir が空です。")
+		return false
+
+	spec.stimulus_root_dir = _normalize_root_dir(root_dir)
+	return true
+
+
+static func _parse_stimuli(data: Dictionary, spec: QuestionnaireSpec) -> bool:
 	if data.has("load_all_glbs") and typeof(data["load_all_glbs"]) != TYPE_BOOL:
 		push_error("load_all_glbs は bool で定義してください。")
 		return false
@@ -99,7 +122,7 @@ static func _parse_stimuli(data: Dictionary, spec: QuestionnaireSpec, json_path:
 			}
 		)
 
-	if load_all_glbs and not _append_directory_glbs(json_path, spec, stimulus_ids, stimulus_files):
+	if load_all_glbs and not _append_directory_glbs(spec.stimulus_root_dir, spec, stimulus_ids, stimulus_files):
 		return false
 
 	if spec.stimuli.is_empty():
@@ -113,13 +136,35 @@ static func _stimulus_file_key(file_name: String) -> String:
 	return file_name.replace("\\", "/").trim_prefix("./").to_lower()
 
 
+static func _normalize_root_dir(root_dir: String) -> String:
+	var normalized := root_dir.replace("\\", "/")
+
+	if normalized == "~":
+		return _get_home_dir()
+
+	if normalized.begins_with("~/"):
+		var home_dir := _get_home_dir()
+		if home_dir.is_empty():
+			return normalized.trim_suffix("/")
+		return home_dir.path_join(normalized.trim_prefix("~/")).trim_suffix("/")
+
+	return normalized.trim_suffix("/")
+
+
+static func _get_home_dir() -> String:
+	var home_dir := OS.get_environment("HOME").replace("\\", "/")
+	if home_dir.is_empty():
+		home_dir = OS.get_environment("USERPROFILE").replace("\\", "/")
+
+	return home_dir.trim_suffix("/")
+
+
 static func _append_directory_glbs(
-	json_path: String,
+	directory_path: String,
 	spec: QuestionnaireSpec,
 	stimulus_ids: Dictionary,
 	stimulus_files: Dictionary
 ) -> bool:
-	var directory_path := json_path.get_base_dir()
 	var directory := DirAccess.open(directory_path)
 	if directory == null:
 		push_error("GLB フォルダを開けません: %s" % directory_path)

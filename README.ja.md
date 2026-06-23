@@ -50,12 +50,15 @@ GodotでSD法質問紙のデモを実行するためのサンプルプロジェ�
 
 `sample/sample.tscn`では、`assets`フォルダ直下に配置したGLBファイルを刺激として表示できます。GLBファイルを追加したあと、必要に応じて`assets/questionnaire.json`を編集してください。
 
+`sample/desktop_sample.tscn`では、`assets/questionnaire_desktop.json`の`root_dir`に指定した外部ディレクトリからGLBファイルを読み込みます。初期設定は`~/Desktop`です。
+
 ## questionnaire.jsonのルール
 
 `assets/questionnaire.json`は、表示する刺激、尺度の点数、形容詞対、ランダム化、CSV出力先を定義します。
 
 ```json
 {
+  "root_dir": "~/Desktop",
   "stimuli": [
     {
       "id": "s_001",
@@ -87,8 +90,9 @@ GodotでSD法質問紙のデモを実行するためのサンプルプロジェ�
 - `stimuli`: 刺激として表示するGLBファイルの一覧です。
 - `stimuli[].id`: 刺激のIDです。省略した場合は`file_name`の拡張子なしファイル名が使われます。重複はできません。
 - `stimuli[].description`: 質問紙に表示する刺激の説明です。省略できます。
-- `stimuli[].file_name`: `assets`フォルダからの相対パスです。`sample.glb`や`kenney_car/van.glb`のように指定します。
-- `load_all_glbs`: `true`にすると、JSONファイルと同じフォルダ内の未指定GLBファイルも刺激に追加します。`sample/sample.tscn`では`assets`直下のGLBファイルが対象になります。
+- `stimuli[].file_name`: `root_dir`からの相対パスです。`root_dir`未指定時は`assets`フォルダからの相対パスです。`sample.glb`や`kenney_car/van.glb`のように指定します。
+- `root_dir`: GLBファイルを探す起点ディレクトリです。`~/Desktop`のように指定するとDesktop上のGLBを読み込みます。省略時は従来通り`res://assets`です。
+- `load_all_glbs`: `true`にすると、`root_dir`または`assets`直下の未指定GLBファイルも刺激に追加します。
 - `points`: SD法尺度の段階数です。`5`または`7`を指定します。
 - `adjective_pairs`: 形容詞対の一覧です。`["左ラベル", "右ラベル"]`形式、または`{"id": "...", "left": "...", "right": "..."}`形式で指定できます。
 - `adjective_pairs[].id`: CSVの列名として使われます。省略した場合は`left-right`形式のIDが自動生成されます。重複はできません。
