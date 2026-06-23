@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://cnmuhy8jc073r"]
+
+[ext_resource type="Script" uid="uid://dfgp765q62c7j" path="res://sample/desktop_sample.gd" id="1_jlaph"]
+[ext_resource type="Script" uid="uid://k01p0uwdhjk" path="res://sd_questionnaire/questionnaire_screen_dialog.gd" id="2_7kp68"]
+[ext_resource type="Script" uid="uid://dfx4h86t7sj13" path="res://sd_questionnaire/respondent_id_screen_dialog.gd" id="3_rntai"]
+[ext_resource type="PackedScene" path="res://sd_questionnaire/questionnaire_panel.tscn" id="4_8bu8e"]
+[ext_resource type="PackedScene" path="res://sd_questionnaire/respondent_id_panel.tscn" id="5_456ps"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8xq3l"]
+albedo_color = Color(0.45, 0.45, 0.45, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p2o8f"]
+material = SubResource("StandardMaterial3D_8xq3l")
+size = Vector3(0.6, 2, 0.6)
+
+[node name="DesktopSample" type="Node3D" unique_id=733113976]
+script = ExtResource("1_jlaph")
+
+[node name="MainCamera" type="Camera3D" parent="." unique_id=1865957725]
+transform = Transform3D(1, 0, 0, 0, 0.9522894, 0.30519658, 0, -0.30519658, 0.9522894, 0.44885135, 0.8427763, 1.9292665)
+current = true
+fov = 34.2
+
+[node name="ModelRoot" type="Node3D" parent="." unique_id=1522875281]
+
+[node name="Block" type="MeshInstance3D" parent="." unique_id=1262834527]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("BoxMesh_p2o8f")
+
+[node name="QuestionnaireScreenDialog" type="CanvasLayer" parent="." unique_id=1946168116]
+script = ExtResource("2_7kp68")
+panel_position = 1
+margin_px = 8
+
+[node name="QuestionnairePanel" parent="QuestionnaireScreenDialog" unique_id=1075349843 instance=ExtResource("4_8bu8e")]
+visible = false
+content_margin_px = 6
+label_width_px = 190
+option_separation_px = 2
+option_circle_outline_color = Color(0.8627451, 0.9019608, 0.9411765, 1)
+option_circle_selected_color = Color(0.8627451, 0.9019608, 0.9411765, 1)
+scrollbar_width_px = 20
+scrollbar_corner_radius_px = 4
+scrollbar_track_color = Color(0.12773255, 0.1624285, 0.18488184, 0.8509804)
+scrollbar_grabber_color = Color(0.8627451, 0.9019608, 0.9411765, 1)
+label_font_size = 28
+submit_button_font_size = 28
+
+[node name="RespondentIdScreenDialog" type="CanvasLayer" parent="." unique_id=692574819]
+script = ExtResource("3_rntai")
+
+[node name="RespondentIdPanel" parent="RespondentIdScreenDialog" unique_id=1418304597 instance=ExtResource("5_456ps")]
+visible = false
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=843267721]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.125205, 0)
+light_size = 0.09
