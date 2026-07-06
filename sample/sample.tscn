@@ -10,7 +10,7 @@
 script = ExtResource("1_3k5ql")
 
 [node name="MainCamera" type="Camera3D" parent="." unique_id=367262806]
-transform = Transform3D(1, 0, 0, 0, 0.9522894, 0.30519658, 0, -0.30519658, 0.9522894, 1.8288879, 1.757823, 4.25)
+transform = Transform3D(1, 0, 0, 0, 0.9522894, 0.30519658, 0, -0.30519658, 0.9522894, 0.63445497, 0.5640323, 1.4130516)
 current = true
 fov = 55.0
 
@@ -21,7 +21,7 @@ script = ExtResource("2_q6wns")
 panel_position = 1
 margin_px = 8
 
-[node name="QuestionnairePanel" parent="QuestionnaireScreenDialog" instance=ExtResource("4_4o43f")]
+[node name="QuestionnairePanel" parent="QuestionnaireScreenDialog" unique_id=165680404 instance=ExtResource("4_4o43f")]
 visible = false
 content_margin_px = 6
 label_width_px = 190
@@ -38,7 +38,7 @@ submit_button_font_size = 28
 [node name="RespondentIdScreenDialog" type="CanvasLayer" parent="." unique_id=1748841942]
 script = ExtResource("3_k75uc")
 
-[node name="RespondentIdPanel" parent="RespondentIdScreenDialog" instance=ExtResource("5_5ynax")]
+[node name="RespondentIdPanel" parent="RespondentIdScreenDialog" unique_id=252858432 instance=ExtResource("5_5ynax")]
 visible = false
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1993862074]

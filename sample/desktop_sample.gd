@@ -1,6 +1,7 @@
 extends Node3D
 
 const QUESTIONNAIRE_JSON_PATH := "res://assets/questionnaire_desktop.json"
+const USE_GLB_FILE_NAME_AS_STIMULUS_ID_OPTION := "use_glb_file_name_as_stimulus_id"
 
 @onready var _model_root: Node3D = $ModelRoot
 @onready var _questionnaire_screen_dialog: QuestionnaireScreenDialog = $QuestionnaireScreenDialog
@@ -16,6 +17,7 @@ var _current_index: int = 0
 var _answers: Array[Dictionary] = []
 var _respondent_id: String = ""
 var _orbit_angle: float = 0.0
+var _use_glb_file_name_as_stimulus_id: bool = false
 
 
 func _ready() -> void:
@@ -52,9 +54,31 @@ func _load_questionnaire() -> bool:
 		push_error("Failed to load questionnaire JSON: %s" % QUESTIONNAIRE_JSON_PATH)
 		return false
 
+	_load_desktop_options()
 	_questionnaire_screen_dialog.setup(_spec, "SD Questionnaire")
 	_questionnaire_screen_dialog.submitted.connect(_on_questionnaire_submitted)
 	return true
+
+
+func _load_desktop_options() -> void:
+	_use_glb_file_name_as_stimulus_id = false
+
+	var file := FileAccess.open(QUESTIONNAIRE_JSON_PATH, FileAccess.READ)
+	if file == null:
+		return
+
+	var data = JSON.parse_string(file.get_as_text())
+	if typeof(data) != TYPE_DICTIONARY:
+		return
+
+	if not data.has(USE_GLB_FILE_NAME_AS_STIMULUS_ID_OPTION):
+		return
+
+	if typeof(data[USE_GLB_FILE_NAME_AS_STIMULUS_ID_OPTION]) != TYPE_BOOL:
+		push_warning("%s must be bool." % USE_GLB_FILE_NAME_AS_STIMULUS_ID_OPTION)
+		return
+
+	_use_glb_file_name_as_stimulus_id = bool(data[USE_GLB_FILE_NAME_AS_STIMULUS_ID_OPTION])
 
 
 func _show_stimulus(index: int) -> void:
@@ -79,10 +103,20 @@ func _show_stimulus(index: int) -> void:
 
 func _open_questionnaire(index: int) -> void:
 	var stimulus: Dictionary = _spec.stimuli[_stimulus_order[index]]
-	var stimulus_id := str(stimulus.get("id", ""))
+	var stimulus_id := _get_stimulus_id(stimulus)
 	var stimulus_description := str(stimulus.get("description", ""))
 	_questionnaire_screen_dialog.reset_answers()
 	_questionnaire_screen_dialog.popup_for_stimulus(stimulus_id, stimulus_description)
+
+
+func _get_stimulus_id(stimulus: Dictionary) -> String:
+	if _use_glb_file_name_as_stimulus_id:
+		var file_name := str(stimulus.get("file_name", "")).strip_edges()
+		var glb_file_name := file_name.get_file()
+		if not glb_file_name.is_empty():
+			return glb_file_name
+
+	return str(stimulus.get("id", ""))
 
 
 func _on_respondent_id_submitted(respondent_id: String) -> void:
