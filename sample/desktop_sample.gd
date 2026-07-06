@@ -39,6 +39,13 @@ func _process(delta: float) -> void:
 	_current_model.rotation.y = _orbit_angle
 
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		var key_event := event as InputEventKey
+		if key_event.pressed and not key_event.echo and key_event.keycode == KEY_ESCAPE:
+			get_tree().quit()
+
+
 func _load_questionnaire() -> bool:
 	_spec = QuestionnaireLoader.load_from_file(QUESTIONNAIRE_JSON_PATH)
 	if _spec == null:
