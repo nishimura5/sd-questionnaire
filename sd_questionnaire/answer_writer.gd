@@ -33,7 +33,8 @@ func open(p_output_name: String, p_spec: QuestionnaireSpec) -> bool:
 func append_answer(
 	row_id: String,
 	respondent_id: String,
-	datetime: String,
+	answer_start_datetime: String,
+	file_save_datetime: String,
 	stimulus_id: String,
 	answers: Dictionary
 ) -> bool:
@@ -51,7 +52,8 @@ func append_answer(
 	var row: Array[String] = [
 		row_id,
 		respondent_id,
-		datetime,
+		answer_start_datetime,
+		file_save_datetime,
 		stimulus_id
 	]
 
@@ -111,7 +113,8 @@ func _make_header() -> Array[String]:
 	var header: Array[String] = [
 		"id",
 		"respondent_id",
-		"datetime",
+		"answer_start_datetime",
+		"file_save_datetime",
 		"stimulus_id"
 	]
 

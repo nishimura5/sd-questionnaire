@@ -22,6 +22,7 @@ var _stimulus_order: Array[int] = []
 var _current_index: int = 0
 var _collected_answers: Array = []
 var _respondent_id: String = ""
+var _answer_start_datetime: String = ""
 var _orbit_angle: float = 0.0
 
 
@@ -187,6 +188,7 @@ func _open_questionnaire_for_stimulus(index: int) -> void:
 
 func _on_respondent_id_submitted(respondent_id: String) -> void:
     _respondent_id = respondent_id
+    _answer_start_datetime = _get_current_datetime()
     _show_stimulus(_current_index)
     _open_questionnaire_for_stimulus(_current_index)
 
@@ -207,22 +209,26 @@ func _on_answers_submitted(stimulus_id: String, answers: Dictionary) -> void:
 
 
 func _export_csv() -> void:
-    var datetime := Time.get_datetime_string_from_system().replace(":", "-")
-
     var writer := AnswerWriter.new()
     if not writer.open(_spec.csv_file_name, _spec):
         push_error("CSVファイルの初期化に失敗しました。")
         return
 
+    var file_save_datetime := _get_current_datetime()
     for i in _collected_answers.size():
         var entry: Dictionary = _collected_answers[i]
         writer.append_answer(
             str(i + 1),
             _respondent_id,
-            datetime,
+            _answer_start_datetime,
+            file_save_datetime,
             entry["stimulus_id"],
             entry["answers"]
         )
 
     var global_path := ProjectSettings.globalize_path(writer.output_path)
     print("CSV出力完了: %s" % global_path)
+
+
+func _get_current_datetime() -> String:
+    return Time.get_datetime_string_from_system().replace(":", "-")

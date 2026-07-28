@@ -16,6 +16,7 @@ var _stimulus_order: Array[int] = []
 var _current_index: int = 0
 var _answers: Array[Dictionary] = []
 var _respondent_id: String = ""
+var _answer_start_datetime: String = ""
 var _orbit_angle: float = 0.0
 var _use_glb_file_name_as_stimulus_id: bool = false
 
@@ -121,6 +122,7 @@ func _get_stimulus_id(stimulus: Dictionary) -> String:
 
 func _on_respondent_id_submitted(respondent_id: String) -> void:
 	_respondent_id = respondent_id
+	_answer_start_datetime = _get_current_datetime()
 	_current_index = 0
 	_answers.clear()
 	_show_stimulus(_current_index)
@@ -148,15 +150,20 @@ func _export_csv() -> void:
 		push_error("Failed to open CSV output.")
 		return
 
-	var datetime := Time.get_datetime_string_from_system().replace(":", "-")
+	var file_save_datetime := _get_current_datetime()
 	for i in range(_answers.size()):
 		var entry := _answers[i]
 		writer.append_answer(
 			str(i + 1),
 			_respondent_id,
-			datetime,
+			_answer_start_datetime,
+			file_save_datetime,
 			entry["stimulus_id"],
 			entry["answers"]
 		)
 
 	print("CSV exported: %s" % ProjectSettings.globalize_path(writer.output_path))
+
+
+func _get_current_datetime() -> String:
+	return Time.get_datetime_string_from_system().replace(":", "-")

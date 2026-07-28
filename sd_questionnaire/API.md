@@ -102,11 +102,11 @@ XR向けも `panel_scene` で `questionnaire_panel.tscn` の差し替えに対�
 ## 5) AnswerWriter (CSV出力)
 
 - `open(output_name: String, spec: QuestionnaireSpec) -> bool`
-- `append_answer(row_id, respondent_id, datetime, stimulus_id, answers) -> bool`
+- `append_answer(row_id, respondent_id, answer_start_datetime, file_save_datetime, stimulus_id, answers) -> bool`
 
 `open()` は `spec.csv_output_directory` を参照し、CSV を Desktop / Downloads / Documents のいずれかへ出力します。未指定時は Desktop です。
 同名の CSV が存在する場合はヘッダを重複出力せず、末尾へ回答行を追記します。
 
 CSVヘッダ:
 
-- `id,respondent_id,datetime,stimulus_id,<pair_id...>`
+- `id,respondent_id,answer_start_datetime,file_save_datetime,stimulus_id,<pair_id...>`

@@ -101,4 +101,4 @@ GodotでSD法質問紙のデモを実行するためのサンプルプロジェ�
 - `csv_file_name`: 出力するCSVファイル名です。省略時は`sd_answers.csv`です。
 - `csv_output_directory`: CSVの出力先です。`Desktop`、`Downloads`、`Documents`、または`~/Desktop`のような形式を指定できます。省略時は`Desktop`です。
 
-CSVには、`id`、`respondent_id`、`datetime`、`stimulus_id`、各形容詞対の回答値が出力されます。
+CSVには、`id`、`respondent_id`、`answer_start_datetime`（回答開始時刻）、`file_save_datetime`（ファイル保存時刻）、`stimulus_id`、各形容詞対の回答値が出力されます。
