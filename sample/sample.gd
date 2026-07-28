@@ -76,7 +76,12 @@ func _open_questionnaire(index: int) -> void:
 	var stimulus_id := str(stimulus.get("id", ""))
 	var stimulus_description := str(stimulus.get("description", ""))
 	_questionnaire_screen_dialog.reset_answers()
-	_questionnaire_screen_dialog.popup_for_stimulus(stimulus_id, stimulus_description)
+	_questionnaire_screen_dialog.popup_for_stimulus(
+		stimulus_id,
+		stimulus_description,
+		index + 1,
+		_stimulus_order.size()
+	)
 
 
 func _on_respondent_id_submitted(respondent_id: String) -> void:

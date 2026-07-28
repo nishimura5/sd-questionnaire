@@ -53,11 +53,12 @@
 ## 2) QuestionnaireScreenDialog (通常画面向け)
 
 - `QuestionnaireScreenDialog.setup(spec: QuestionnaireSpec, title := "SD Questionnaire")`
-- `QuestionnaireScreenDialog.popup_for_stimulus(stimulus_id: String, stimulus_description := "")`
+- `QuestionnaireScreenDialog.popup_for_stimulus(stimulus_id: String, stimulus_description := "", current_stimulus_number := 0, total_stimulus_count := 0)`
 - `QuestionnaireScreenDialog.reset_answers()`
 - signal: `submitted(stimulus_id: String, answers: Dictionary)`
 
 `answers` は `pair_id -> 選択値(1..points)` の辞書。
+`current_stimulus_number` と `total_stimulus_count` に正の値を渡すと、パネル右下に回答状況を `x/y` 形式で表示します。
 
 UIの見た目は `questionnaire_panel.tscn` の root `QuestionnairePanel` で調整できます。
 `QuestionnaireScreenDialog` の子に `QuestionnairePanel` を置くとそのノードを優先して使用し、未配置の場合は `panel_scene`、さらに未設定の場合は標準の `questionnaire_panel.tscn` を使用します。
@@ -87,7 +88,7 @@ XR入力補助:
 ## 4) QuestionnaireXrDialog (XR向け)
 
 - `QuestionnaireXrDialog.setup(spec: QuestionnaireSpec, title := "SD Questionnaire")`
-- `QuestionnaireXrDialog.popup_for_stimulus(stimulus_id: String, stimulus_description := "")`
+- `QuestionnaireXrDialog.popup_for_stimulus(stimulus_id: String, stimulus_description := "", current_stimulus_number := 0, total_stimulus_count := 0)`
 - `QuestionnaireXrDialog.reset_answers()`
 - `QuestionnaireXrDialog.set_follow_camera(camera: Camera3D)`
 - signal: `submitted(stimulus_id: String, answers: Dictionary)`

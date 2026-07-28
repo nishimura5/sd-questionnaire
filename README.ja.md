@@ -40,7 +40,7 @@ GodotでSD法質問紙のデモを実行するためのサンプルプロジェ�
 - `Floor`: 刺激モデルの下に置かれた床用の`MeshInstance3D`です。モデルの接地感を出し、影を受ける面として使われます。
 - `ModelRoot`: 実行時に読み込まれたGLBモデルを追加する親ノードです。次の刺激へ進むたびに現在のモデルを削除し、新しいモデルをこの下に配置します。
 - `QuestionnaireScreenDialog`: SD法質問紙を画面上に表示する`CanvasLayer`です。`sd_questionnaire/questionnaire_screen_dialog.gd`がアタッチされており、回答送信時にシーンへ結果を渡します。
-- `QuestionnairePanel`: 質問文、尺度、送信ボタンを持つ質問紙UIです。`sd_questionnaire/questionnaire_panel.tscn`のインスタンスで、刺激が表示されるまで非表示になっています。
+- `QuestionnairePanel`: 質問文、尺度、送信ボタン、`x/y`形式の回答状況を持つ質問紙UIです。`sd_questionnaire/questionnaire_panel.tscn`のインスタンスで、刺激が表示されるまで非表示になっています。
 - `RespondentIdScreenDialog`: 回答者ID入力UIを画面上に表示する`CanvasLayer`です。回答開始前に表示され、入力されたIDをCSV出力時に使用します。
 - `RespondentIdPanel`: 回答者ID入力欄と送信ボタンを持つUIです。`sd_questionnaire/respondent_id_panel.tscn`のインスタンスで、`RespondentIdScreenDialog`から表示されます。
 

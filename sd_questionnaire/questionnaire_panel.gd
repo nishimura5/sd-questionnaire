@@ -219,6 +219,7 @@ const DEFAULT_SCROLLBAR_GRABBER_PRESSED_COLOR := Color(0.12, 0.38, 0.72)
 var _spec: QuestionnaireSpec
 var _pair_buttons: Dictionary = {}
 var _submit_button: Button
+var _progress_label: Label
 var _warning_label: Label
 var _title_label: Label
 var _scroll_container: ScrollContainer
@@ -233,9 +234,15 @@ func setup(spec: QuestionnaireSpec, p_title: String = "SD Questionnaire") -> voi
 	reset_answers()
 
 
-func popup_for_stimulus(stimulus_id: String, _stimulus_description: String = "") -> void:
+func popup_for_stimulus(
+	stimulus_id: String,
+	_stimulus_description: String = "",
+	current_stimulus_number: int = 0,
+	total_stimulus_count: int = 0
+) -> void:
 	_current_stimulus_id = stimulus_id
 	_set_title(stimulus_id)
+	_update_progress(current_stimulus_number, total_stimulus_count)
 	show()
 	_reset_scroll_position()
 	_update_submit_state()
@@ -249,6 +256,7 @@ func reset_answers() -> void:
 	_current_stimulus_id = ""
 	if is_instance_valid(_warning_label):
 		_warning_label.text = ""
+	_update_progress(0, 0)
 	_set_title(_base_title)
 	_reset_scroll_position()
 	_update_submit_state()
@@ -372,18 +380,40 @@ func _build_ui() -> void:
 	_warning_label.text = ""
 	root.add_child(_warning_label)
 
-	var button_row := HBoxContainer.new()
-	button_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	button_row.add_theme_constant_override("separation", 8)
-	root.add_child(button_row)
+	var footer := Control.new()
+	footer.name = "Footer"
+	footer.custom_minimum_size = Vector2(0, 50)
+	footer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	root.add_child(footer)
+
+	var button_center := CenterContainer.new()
+	button_center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	footer.add_child(button_center)
 
 	_submit_button = Button.new()
+	_submit_button.name = "SubmitButton"
 	_submit_button.text = "次へ"
 	_submit_button.disabled = true
 	_submit_button.custom_minimum_size = Vector2(120, 50)
 	_submit_button.add_theme_font_size_override("font_size", submit_button_font_size)
 	_submit_button.pressed.connect(_on_submit_pressed)
-	button_row.add_child(_submit_button)
+	button_center.add_child(_submit_button)
+
+	var progress_container := MarginContainer.new()
+	progress_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	progress_container.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	footer.add_child(progress_container)
+
+	_progress_label = Label.new()
+	_progress_label.name = "ProgressLabel"
+	_progress_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_progress_label.size_flags_horizontal = Control.SIZE_SHRINK_END
+	_progress_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_progress_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_progress_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_progress_label.add_theme_font_size_override("font_size", submit_button_font_size)
+	progress_container.add_child(_progress_label)
+	_update_progress(0, 0)
 
 
 func _update_scrollbar_theme() -> void:
@@ -417,6 +447,19 @@ func _make_scrollbar_stylebox(color: Color) -> StyleBoxFlat:
 func _set_title(value: String) -> void:
 	if is_instance_valid(_title_label):
 		_title_label.text = value
+
+
+func _update_progress(current_stimulus_number: int, total_stimulus_count: int) -> void:
+	if not is_instance_valid(_progress_label):
+		return
+
+	if current_stimulus_number <= 0 or total_stimulus_count <= 0:
+		_progress_label.text = ""
+		_progress_label.hide()
+		return
+
+	_progress_label.text = "%d/%d" % [current_stimulus_number, total_stimulus_count]
+	_progress_label.show()
 
 
 func _reset_scroll_position() -> void:

@@ -31,9 +31,19 @@ func setup(spec: QuestionnaireSpec, p_title: String = "SD Questionnaire") -> voi
 	_update_panel_layout()
 
 
-func popup_for_stimulus(stimulus_id: String, stimulus_description: String = "") -> void:
+func popup_for_stimulus(
+	stimulus_id: String,
+	stimulus_description: String = "",
+	current_stimulus_number: int = 0,
+	total_stimulus_count: int = 0
+) -> void:
 	_ensure_panel()
-	_panel.popup_for_stimulus(stimulus_id, stimulus_description)
+	_panel.popup_for_stimulus(
+		stimulus_id,
+		stimulus_description,
+		current_stimulus_number,
+		total_stimulus_count
+	)
 	_update_panel_layout()
 
 

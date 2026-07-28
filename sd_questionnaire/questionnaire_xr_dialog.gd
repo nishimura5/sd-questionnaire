@@ -41,9 +41,19 @@ func set_follow_camera(camera: Camera3D) -> void:
 	_update_pose()
 
 
-func popup_for_stimulus(stimulus_id: String, stimulus_description: String = "") -> void:
+func popup_for_stimulus(
+	stimulus_id: String,
+	stimulus_description: String = "",
+	current_stimulus_number: int = 0,
+	total_stimulus_count: int = 0
+) -> void:
 	_ensure_nodes()
-	_panel.popup_for_stimulus(stimulus_id, stimulus_description)
+	_panel.popup_for_stimulus(
+		stimulus_id,
+		stimulus_description,
+		current_stimulus_number,
+		total_stimulus_count
+	)
 	_update_visibility(true)
 	_update_viewport_layout()
 	_update_pose()
