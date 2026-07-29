@@ -3,7 +3,12 @@ class_name QuestionnaireSpec
 extends RefCounted
 
 var stimuli: Array = []
+var configured_stimuli: Array = []
 var stimulus_root_dir: String = "res://assets"
+var load_all_glbs: bool = false
+var use_subdirectory: bool = false
+var stimulus_subdirectories: Array[String] = []
+var selected_stimulus_subdirectory: String = ""
 var points: int = 7
 var adjective_pairs: Array = []
 var randomise_stimuli: bool = false
@@ -23,6 +28,25 @@ func get_pair_ids() -> Array[String]:
 		ids.append(str(pair.get("id", "")))
 
 	return ids
+
+
+func requires_stimulus_subdirectory_selection() -> bool:
+	return (
+		use_subdirectory
+		and load_all_glbs
+		and not stimulus_subdirectories.is_empty()
+		and selected_stimulus_subdirectory.is_empty()
+	)
+
+
+func get_csv_stimulus_id(stimulus_id: String) -> String:
+	var normalized_subdirectory := selected_stimulus_subdirectory.replace("\\", "/").strip_edges().trim_suffix("/")
+	var normalized_stimulus_id := stimulus_id.replace("\\", "/").strip_edges().trim_prefix("/")
+	if normalized_subdirectory.is_empty() or normalized_stimulus_id.is_empty():
+		return normalized_stimulus_id
+	if normalized_stimulus_id == normalized_subdirectory or normalized_stimulus_id.begins_with("%s/" % normalized_subdirectory):
+		return normalized_stimulus_id
+	return normalized_subdirectory.path_join(normalized_stimulus_id)
 
 
 func build_stimulus_order() -> Array[int]:

@@ -26,6 +26,9 @@ static func load_from_file(path: String) -> QuestionnaireSpec:
 	if not _parse_root_dir(data, spec):
 		return null
 
+	if not _parse_subdirectory_option(data, spec):
+		return null
+
 	if not _parse_points(data, spec):
 		return null
 
@@ -79,6 +82,7 @@ static func _parse_stimuli(data: Dictionary, spec: QuestionnaireSpec) -> bool:
 		return false
 
 	var load_all_glbs := bool(data.get("load_all_glbs", false))
+	spec.load_all_glbs = load_all_glbs
 	var stimuli_data: Array = []
 
 	if data.has("stimuli"):
@@ -122,13 +126,65 @@ static func _parse_stimuli(data: Dictionary, spec: QuestionnaireSpec) -> bool:
 			}
 		)
 
-	if load_all_glbs and not _append_directory_glbs(spec.stimulus_root_dir, spec, stimulus_ids, stimulus_files):
-		return false
+	spec.configured_stimuli = spec.stimuli.duplicate(true)
 
-	if spec.stimuli.is_empty():
+	if load_all_glbs:
+		if spec.requires_stimulus_subdirectory_selection():
+			spec.stimuli.clear()
+		elif not _append_directory_glbs(spec.stimulus_root_dir, spec, stimulus_ids, stimulus_files):
+			return false
+
+	if spec.stimuli.is_empty() and not spec.requires_stimulus_subdirectory_selection():
 		push_error("stimuli が空です。1件以上定義してください。")
 		return false
 
+	return true
+
+
+static func select_stimulus_subdirectory(spec: QuestionnaireSpec, subdirectory_name: String) -> bool:
+	if spec == null:
+		push_error("QuestionnaireSpec が未設定です。")
+		return false
+	if not spec.use_subdirectory or not spec.load_all_glbs or spec.stimulus_subdirectories.is_empty():
+		push_error("サブフォルダ選択が有効ではありません。")
+		return false
+
+	var normalized_name := subdirectory_name.replace("\\", "/").strip_edges().trim_prefix("./").trim_suffix("/")
+	if normalized_name.is_empty() or not spec.stimulus_subdirectories.has(normalized_name):
+		push_error("選択できないサブフォルダです: %s" % subdirectory_name)
+		return false
+
+	spec.stimuli = []
+	spec.selected_stimulus_subdirectory = ""
+
+	var stimulus_ids := {}
+	var stimulus_files := {}
+	for configured_stimulus in spec.configured_stimuli:
+		var stimulus: Dictionary = configured_stimulus.duplicate(true)
+		var stimulus_id := str(stimulus.get("id", ""))
+		var file_name := str(stimulus.get("file_name", "")).replace("\\", "/").trim_prefix("./")
+		if not file_name.begins_with("%s/" % normalized_name):
+			file_name = normalized_name.path_join(file_name)
+		stimulus["file_name"] = file_name
+		spec.stimuli.append(stimulus)
+		stimulus_ids[stimulus_id] = true
+		stimulus_files[_stimulus_file_key(file_name)] = true
+
+	var directory_path := spec.stimulus_root_dir.path_join(normalized_name)
+	if not _append_directory_glbs(
+		directory_path,
+		spec,
+		stimulus_ids,
+		stimulus_files,
+		normalized_name
+	):
+		return false
+
+	if spec.stimuli.is_empty():
+		push_error("選択したサブフォルダにGLBファイルがありません: %s" % directory_path)
+		return false
+
+	spec.selected_stimulus_subdirectory = normalized_name
 	return true
 
 
@@ -159,11 +215,40 @@ static func _get_home_dir() -> String:
 	return home_dir.trim_suffix("/")
 
 
+static func _parse_subdirectory_option(data: Dictionary, spec: QuestionnaireSpec) -> bool:
+	if data.has("use_subdirectory") and typeof(data["use_subdirectory"]) != TYPE_BOOL:
+		push_error("use_subdirectory は bool で定義してください。")
+		return false
+
+	spec.use_subdirectory = bool(data.get("use_subdirectory", false))
+	if not spec.use_subdirectory:
+		return true
+
+	var directory := DirAccess.open(spec.stimulus_root_dir)
+	if directory == null:
+		push_error("GLB フォルダを開けません: %s" % spec.stimulus_root_dir)
+		return false
+
+	var subdirectories: Array[String] = []
+	directory.list_dir_begin()
+	var entry_name := directory.get_next()
+	while not entry_name.is_empty():
+		if directory.current_is_dir() and entry_name != "." and entry_name != "..":
+			subdirectories.append(entry_name)
+		entry_name = directory.get_next()
+	directory.list_dir_end()
+
+	subdirectories.sort()
+	spec.stimulus_subdirectories = subdirectories
+	return true
+
+
 static func _append_directory_glbs(
 	directory_path: String,
 	spec: QuestionnaireSpec,
 	stimulus_ids: Dictionary,
-	stimulus_files: Dictionary
+	stimulus_files: Dictionary,
+	relative_prefix: String = ""
 ) -> bool:
 	var directory := DirAccess.open(directory_path)
 	if directory == null:
@@ -183,7 +268,11 @@ static func _append_directory_glbs(
 
 	var generated_index := 1
 	for glb_file_name in glb_files:
-		if stimulus_files.has(_stimulus_file_key(glb_file_name)):
+		var relative_file_name := glb_file_name
+		if not relative_prefix.is_empty():
+			relative_file_name = relative_prefix.path_join(glb_file_name)
+
+		if stimulus_files.has(_stimulus_file_key(relative_file_name)):
 			continue
 
 		var stimulus_id := "sti_%03d" % generated_index
@@ -197,7 +286,7 @@ static func _append_directory_glbs(
 			{
 				"id": stimulus_id,
 				"description": "",
-				"file_name": glb_file_name
+				"file_name": relative_file_name
 			}
 		)
 

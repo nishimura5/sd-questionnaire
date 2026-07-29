@@ -67,6 +67,7 @@ GodotでSD法質問紙のデモを実行するためのサンプルプロジェ�
     }
   ],
   "load_all_glbs": true,
+  "use_subdirectory": true,
   "points": 7,
   "adjective_pairs": [
     ["明るい", "暗い"],
@@ -93,6 +94,7 @@ GodotでSD法質問紙のデモを実行するためのサンプルプロジェ�
 - `stimuli[].file_name`: `root_dir`からの相対パスです。`root_dir`未指定時は`assets`フォルダからの相対パスです。`sample.glb`や`kenney_car/van.glb`のように指定します。
 - `root_dir`: GLBファイルを探す起点ディレクトリです。`~/Desktop`のように指定するとDesktop上のGLBを読み込みます。省略時は従来通り`res://assets`です。
 - `load_all_glbs`: `true`にすると、`root_dir`または`assets`直下の未指定GLBファイルも刺激に追加します。
+- `use_subdirectory`: `true`かつ`load_all_glbs`も`true`で、`root_dir`にサブフォルダがある場合、回答者ID入力画面にフォルダ選択メニューを表示します。選択したサブフォルダ直下のGLBファイルだけが自動追加され、この場合の`stimuli[].file_name`は選択したサブフォルダからの相対パスとして扱われます。
 - `points`: SD法尺度の段階数です。`5`または`7`を指定します。
 - `adjective_pairs`: 形容詞対の一覧です。`["左ラベル", "右ラベル"]`形式、または`{"id": "...", "left": "...", "right": "..."}`形式で指定できます。
 - `adjective_pairs[].id`: CSVの列名として使われます。省略した場合は`left-right`形式のIDが自動生成されます。重複はできません。
@@ -101,4 +103,4 @@ GodotでSD法質問紙のデモを実行するためのサンプルプロジェ�
 - `csv_file_name`: 出力するCSVファイル名です。省略時は`sd_answers.csv`です。
 - `csv_output_directory`: CSVの出力先です。`Desktop`、`Downloads`、`Documents`、または`~/Desktop`のような形式を指定できます。省略時は`Desktop`です。
 
-CSVには、`id`、`respondent_id`、`answer_start_datetime`（回答開始時刻）、`file_save_datetime`（ファイル保存時刻）、`stimulus_id`、各形容詞対の回答値が出力されます。
+CSVには、`id`、`respondent_id`、`answer_start_datetime`（回答開始時刻）、`file_save_datetime`（ファイル保存時刻）、`stimulus_id`、各形容詞対の回答値が出力されます。サブフォルダを選択した場合、`stimulus_id`は`foldername/stimulus_id`形式になります。

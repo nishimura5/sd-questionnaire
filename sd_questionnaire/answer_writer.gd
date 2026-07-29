@@ -54,7 +54,7 @@ func append_answer(
 		respondent_id,
 		answer_start_datetime,
 		file_save_datetime,
-		stimulus_id
+		spec.get_csv_stimulus_id(stimulus_id)
 	]
 
 	for pair_id in spec.get_pair_ids():

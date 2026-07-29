@@ -1,12 +1,14 @@
 class_name RespondentIdPanel
 extends PanelContainer
 
-signal submitted(respondent_id: String)
+signal submitted(respondent_id: String, selected_subdirectory: String)
 
 @export var content_margin_px: int = 24
 @export var title_text: String = "回答者ID"
 @export var prompt_text: String = "回答者IDを入力してください。"
 @export var placeholder_text: String = "respondent_id"
+@export var folder_prompt_text: String = "フォルダ"
+@export var folder_placeholder_text: String = "フォルダを選択してください。"
 @export var submit_button_text: String = "次へ"
 @export var title_font_size: int = 28
 @export var label_font_size: int = 20
@@ -54,6 +56,9 @@ signal submitted(respondent_id: String)
 var _title_label: Label
 var _prompt_label: Label
 var _line_edit: LineEdit
+var _folder_row: HBoxContainer
+var _folder_label: Label
+var _folder_selector: OptionButton
 var _submit_button: Button
 var _warning_label: Label
 var _ui_built := false
@@ -64,12 +69,17 @@ func _ready() -> void:
 	_update_submit_state()
 
 
-func setup(p_title: String = "回答者ID", p_prompt: String = "回答者IDを入力してください。") -> void:
+func setup(
+	p_title: String = "回答者ID",
+	p_prompt: String = "回答者IDを入力してください。",
+	p_subdirectories: Array[String] = []
+) -> void:
 	title_text = p_title
 	prompt_text = p_prompt
 	_ensure_ui()
 	_apply_texts()
 	reset()
+	set_subdirectories(p_subdirectories)
 
 
 func popup(initial_respondent_id: String = "") -> void:
@@ -85,9 +95,42 @@ func popup(initial_respondent_id: String = "") -> void:
 func reset() -> void:
 	if is_instance_valid(_line_edit):
 		_line_edit.text = ""
+	if is_instance_valid(_folder_selector) and _folder_selector.item_count > 0:
+		_folder_selector.select(0)
 	if is_instance_valid(_warning_label):
 		_warning_label.text = ""
 	_update_submit_state()
+
+
+func set_subdirectories(subdirectories: Array[String]) -> void:
+	_ensure_ui()
+	_folder_selector.clear()
+
+	if subdirectories.is_empty():
+		_folder_row.hide()
+		_update_submit_state()
+		return
+
+	_folder_selector.add_item(folder_placeholder_text)
+	_folder_selector.set_item_disabled(0, true)
+	for subdirectory in subdirectories:
+		_folder_selector.add_item(subdirectory)
+	_folder_selector.select(0)
+	_folder_row.show()
+	_update_submit_state()
+
+
+func get_selected_subdirectory() -> String:
+	if not is_instance_valid(_folder_row) or not _folder_row.visible:
+		return ""
+	if not is_instance_valid(_folder_selector) or _folder_selector.selected <= 0:
+		return ""
+	return _folder_selector.get_item_text(_folder_selector.selected)
+
+
+func show_warning(message: String) -> void:
+	_ensure_ui()
+	_warning_label.text = message
 
 
 func _ensure_ui() -> void:
@@ -130,6 +173,25 @@ func _ensure_ui() -> void:
 	_line_edit.text_submitted.connect(_on_id_text_submitted)
 	root.add_child(_line_edit)
 
+	_folder_row = HBoxContainer.new()
+	_folder_row.add_theme_constant_override("separation", 12)
+	_folder_row.hide()
+	root.add_child(_folder_row)
+
+	_folder_label = Label.new()
+	_folder_label.custom_minimum_size = Vector2(100, 48)
+	_folder_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_folder_label.add_theme_font_size_override("font_size", label_font_size)
+	_folder_row.add_child(_folder_label)
+
+	_folder_selector = OptionButton.new()
+	_folder_selector.custom_minimum_size = Vector2(0, 48)
+	_folder_selector.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_folder_selector.clip_text = true
+	_folder_selector.add_theme_font_size_override("font_size", input_font_size)
+	_folder_selector.item_selected.connect(_on_folder_selected)
+	_folder_row.add_child(_folder_selector)
+
 	_warning_label = Label.new()
 	_warning_label.text = ""
 	_warning_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -163,6 +225,8 @@ func _apply_texts() -> void:
 		_prompt_label.text = prompt_text
 	if is_instance_valid(_line_edit):
 		_line_edit.placeholder_text = placeholder_text
+	if is_instance_valid(_folder_label):
+		_folder_label.text = folder_prompt_text
 	if is_instance_valid(_submit_button):
 		_submit_button.text = submit_button_text
 
@@ -184,6 +248,16 @@ func _update_color_theme() -> void:
 		_line_edit.add_theme_stylebox_override("normal", _make_control_stylebox(input_background_color, input_border_color, 6))
 		_line_edit.add_theme_stylebox_override("focus", _make_control_stylebox(input_background_color, text_color, 6))
 		_line_edit.add_theme_stylebox_override("read_only", _make_control_stylebox(input_background_color, input_border_color, 6))
+	if is_instance_valid(_folder_label):
+		_folder_label.add_theme_color_override("font_color", muted_text_color)
+	if is_instance_valid(_folder_selector):
+		_folder_selector.add_theme_color_override("font_color", text_color)
+		_folder_selector.add_theme_color_override("font_hover_color", text_color)
+		_folder_selector.add_theme_color_override("font_pressed_color", text_color)
+		_folder_selector.add_theme_color_override("font_disabled_color", muted_text_color)
+		_folder_selector.add_theme_stylebox_override("normal", _make_control_stylebox(input_background_color, input_border_color, 6))
+		_folder_selector.add_theme_stylebox_override("hover", _make_control_stylebox(input_background_color, text_color, 6))
+		_folder_selector.add_theme_stylebox_override("pressed", _make_control_stylebox(input_background_color, input_border_color, 6))
 	if is_instance_valid(_submit_button):
 		_submit_button.add_theme_color_override("font_color", text_color)
 		_submit_button.add_theme_color_override("font_hover_color", text_color)
@@ -228,11 +302,19 @@ func _on_id_text_submitted(_new_text: String) -> void:
 		_on_submit_pressed()
 
 
+func _on_folder_selected(_index: int) -> void:
+	if is_instance_valid(_warning_label):
+		_warning_label.text = ""
+	_update_submit_state()
+
+
 func _update_submit_state() -> void:
 	if not is_instance_valid(_submit_button) or not is_instance_valid(_line_edit):
 		return
 
-	_submit_button.disabled = _line_edit.text.strip_edges().is_empty()
+	var folder_is_required := is_instance_valid(_folder_row) and _folder_row.visible
+	var folder_is_selected := not folder_is_required or get_selected_subdirectory() != ""
+	_submit_button.disabled = _line_edit.text.strip_edges().is_empty() or not folder_is_selected
 
 
 func _on_submit_pressed() -> void:
@@ -241,6 +323,10 @@ func _on_submit_pressed() -> void:
 		_warning_label.text = "回答者IDを入力してください。"
 		_update_submit_state()
 		return
+	if is_instance_valid(_folder_row) and _folder_row.visible and get_selected_subdirectory().is_empty():
+		_warning_label.text = "フォルダを選択してください。"
+		_update_submit_state()
+		return
 
 	hide()
-	emit_signal("submitted", respondent_id)
+	emit_signal("submitted", respondent_id, get_selected_subdirectory())

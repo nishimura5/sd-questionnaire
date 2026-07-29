@@ -3,6 +3,7 @@
   "stimuli": [
   ],
   "load_all_glbs": true,
+  "use_subdirectory": true,
   "use_glb_file_name_as_stimulus_id": true,
   "points": 7,
   "adjective_pairs": [

@@ -1,13 +1,13 @@
 class_name RespondentIdScreenDialog
 extends CanvasLayer
 
-signal submitted(respondent_id: String)
+signal submitted(respondent_id: String, selected_subdirectory: String)
 
 const DEFAULT_PANEL_SCENE := preload("res://sd_questionnaire/respondent_id_panel.tscn")
 const PANEL_SCRIPT := preload("res://sd_questionnaire/respondent_id_panel.gd")
 
 @export var panel_scene: PackedScene
-@export var panel_size_px: Vector2i = Vector2i(520, 260)
+@export var panel_size_px: Vector2i = Vector2i(520, 360)
 @export var margin_px: int = 16
 @export var layer_index: int = 100
 
@@ -22,9 +22,13 @@ func _ready() -> void:
 	_update_panel_layout()
 
 
-func setup(p_title: String = "回答者ID", p_prompt: String = "回答者IDを入力してください。") -> void:
+func setup(
+	p_title: String = "回答者ID",
+	p_prompt: String = "回答者IDを入力してください。",
+	p_subdirectories: Array[String] = []
+) -> void:
 	_ensure_panel()
-	_panel.call("setup", p_title, p_prompt)
+	_panel.call("setup", p_title, p_prompt, p_subdirectories)
 	_update_panel_layout()
 
 
@@ -42,6 +46,11 @@ func hide_dialog() -> void:
 func reset() -> void:
 	if is_instance_valid(_panel):
 		_panel.call("reset")
+
+
+func show_warning(message: String) -> void:
+	_ensure_panel()
+	_panel.call("show_warning", message)
 
 
 func _process(_delta: float) -> void:
@@ -121,5 +130,5 @@ func _update_panel_layout() -> void:
 	_panel.size = Vector2(width, height)
 
 
-func _on_panel_submitted(respondent_id: String) -> void:
-	emit_signal("submitted", respondent_id)
+func _on_panel_submitted(respondent_id: String, selected_subdirectory: String) -> void:
+	emit_signal("submitted", respondent_id, selected_subdirectory)

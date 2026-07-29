@@ -1,14 +1,14 @@
 class_name RespondentIdXrDialog
 extends Node3D
 
-signal submitted(respondent_id: String)
+signal submitted(respondent_id: String, selected_subdirectory: String)
 
 const DEFAULT_PANEL_SCENE := preload("res://sd_questionnaire/respondent_id_panel.tscn")
 const PANEL_SCRIPT := preload("res://sd_questionnaire/respondent_id_panel.gd")
 
 @export var panel_scene: PackedScene
-@export var viewport_size := Vector2i(768, 384)
-@export var quad_size_m := Vector2(1.0, 0.5)
+@export var viewport_size := Vector2i(768, 480)
+@export var quad_size_m := Vector2(1.0, 0.625)
 @export var distance_from_camera_m: float = 1.35
 @export var vertical_offset_from_camera_m: float = -0.28
 @export var prefer_openxr_composition_layer: bool = true
@@ -31,9 +31,13 @@ func _ready() -> void:
 	set_process(true)
 
 
-func setup(p_title: String = "回答者ID", p_prompt: String = "回答者IDを入力してください。") -> void:
+func setup(
+	p_title: String = "回答者ID",
+	p_prompt: String = "回答者IDを入力してください。",
+	p_subdirectories: Array[String] = []
+) -> void:
 	_ensure_nodes()
-	_panel.call("setup", p_title, p_prompt)
+	_panel.call("setup", p_title, p_prompt, p_subdirectories)
 	_update_viewport_layout()
 
 
@@ -57,6 +61,11 @@ func hide_dialog() -> void:
 func reset() -> void:
 	if is_instance_valid(_panel):
 		_panel.call("reset")
+
+
+func show_warning(message: String) -> void:
+	_ensure_nodes()
+	_panel.call("show_warning", message)
 
 
 func _process(_delta: float) -> void:
@@ -270,6 +279,6 @@ func _is_valid_uv(uv: Vector2) -> bool:
 	return uv.x >= 0.0 and uv.x <= 1.0 and uv.y >= 0.0 and uv.y <= 1.0
 
 
-func _on_panel_submitted(respondent_id: String) -> void:
+func _on_panel_submitted(respondent_id: String, selected_subdirectory: String) -> void:
 	_update_visibility(false)
-	emit_signal("submitted", respondent_id)
+	emit_signal("submitted", respondent_id, selected_subdirectory)

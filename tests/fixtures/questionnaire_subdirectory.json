@@ -1,0 +1,15 @@
+{
+  "root_dir": "res://assets",
+  "stimuli": [
+    {
+      "id": "configured_van",
+      "file_name": "van.glb"
+    }
+  ],
+  "load_all_glbs": true,
+  "use_subdirectory": true,
+  "points": 5,
+  "adjective_pairs": [
+    ["left", "right"]
+  ]
+}

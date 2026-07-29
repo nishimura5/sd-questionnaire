@@ -27,6 +27,7 @@
 	}
   ],
   "load_all_glbs": true,
+  "use_subdirectory": false,
   "points": 7,
   "adjective_pairs": [
 	["ちからもち", "ちからがよわい"],

@@ -27,8 +27,12 @@ func _ready() -> void:
 	if not _load_questionnaire():
 		return
 
-	_stimulus_order = _spec.build_stimulus_order()
 	_respondent_id_screen_dialog.submitted.connect(_on_respondent_id_submitted)
+	_respondent_id_screen_dialog.setup(
+		"回答者ID",
+		"回答者IDを入力してください。",
+		_spec.stimulus_subdirectories if _spec.requires_stimulus_subdirectory_selection() else []
+	)
 	_respondent_id_screen_dialog.popup()
 
 
@@ -125,7 +129,20 @@ func _get_stimulus_id(stimulus: Dictionary) -> String:
 	return str(stimulus.get("id", ""))
 
 
-func _on_respondent_id_submitted(respondent_id: String) -> void:
+func _on_respondent_id_submitted(respondent_id: String, selected_subdirectory: String) -> void:
+	if _spec.requires_stimulus_subdirectory_selection():
+		if not QuestionnaireLoader.select_stimulus_subdirectory(_spec, selected_subdirectory):
+			_respondent_id_screen_dialog.popup(respondent_id)
+			_respondent_id_screen_dialog.show_warning(
+				"選択したフォルダからGLBファイルを読み込めませんでした。"
+			)
+			return
+
+	_stimulus_order = _spec.build_stimulus_order()
+	if _stimulus_order.is_empty():
+		push_error("No stimuli were loaded.")
+		return
+
 	_respondent_id = respondent_id
 	_answer_start_datetime = _get_current_datetime()
 	_current_index = 0

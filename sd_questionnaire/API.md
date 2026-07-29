@@ -20,6 +20,7 @@
     }
   ],
   "load_all_glbs": false,
+  "use_subdirectory": false,
   "points": 5,
   "adjective_pairs": [
     ["暖かい", "冷たい"],
@@ -43,6 +44,9 @@
 - `stimuli[].description` は省略可能です。window に表示される刺激名は `description` ではなく `id` です。
 - `stimuli[].id` が未指定の場合は `file_name` の basename から自動補完。
 - `load_all_glbs` が `true` の場合、`root_dir` または `res://assets` 直下のすべての `.glb` を読み込み対象に追加します。
+- `use_subdirectory` が `true` の場合、`root_dir` 直下のサブフォルダ名を `QuestionnaireSpec.stimulus_subdirectories` に格納します。
+- `use_subdirectory` と `load_all_glbs` がともに `true` でサブフォルダがある場合、JSON読み込み時にはGLB一覧を確定しません。`QuestionnaireLoader.select_stimulus_subdirectory(spec, subdirectory_name)` を呼ぶと、選択したサブフォルダ直下の `.glb` が刺激に追加されます。
+- サブフォルダ選択を使う場合、`stimuli[].file_name` は選択したサブフォルダからの相対パスとして扱われます。
 - `stimuli` で未定義の GLB には、ファイル名昇順で `sti_001`, `sti_002`, ... の `id` を付与します。
 - `stimuli` で定義済みの `id` と自動付与された `id` が重複した場合は `Duplicated id. Check json` エラーになります。
 - `adjective_pairs` は配列形式 `[left, right]` とオブジェクト形式 `{left, right, id}` を混在可能。
@@ -65,17 +69,17 @@ UIの見た目は `questionnaire_panel.tscn` の root `QuestionnairePanel` で�
 
 ## 3) RespondentIdScreenDialog / RespondentIdXrDialog (回答者ID入力)
 
-- `RespondentIdScreenDialog.setup(title := "回答者ID", prompt := "回答者IDを入力してください。")`
+- `RespondentIdScreenDialog.setup(title := "回答者ID", prompt := "回答者IDを入力してください。", subdirectories := [])`
 - `RespondentIdScreenDialog.popup(initial_respondent_id := "")`
 - `RespondentIdScreenDialog.hide_dialog()`
 - `RespondentIdScreenDialog.reset()`
-- `RespondentIdXrDialog.setup(title := "回答者ID", prompt := "回答者IDを入力してください。")`
+- `RespondentIdXrDialog.setup(title := "回答者ID", prompt := "回答者IDを入力してください。", subdirectories := [])`
 - `RespondentIdXrDialog.popup(initial_respondent_id := "")`
 - `RespondentIdXrDialog.hide_dialog()`
 - `RespondentIdXrDialog.reset()`
-- signal: `submitted(respondent_id: String)`
+- signal: `submitted(respondent_id: String, selected_subdirectory: String)`
 
-`popup()` で回答者ID入力windowを表示します。「次へ」を押すと `submitted` が送出されるので、そのタイミングで利用中の `QuestionnaireScreenDialog` または `QuestionnaireXrDialog` を開いて回答を開始します。
+`subdirectories` が空でなければフォルダ選択メニューを表示します。`popup()` で回答者ID入力windowを表示し、「次へ」を押すと回答者IDと選択フォルダを含む `submitted` が送出されます。
 UIの見た目は `respondent_id_panel.tscn` の root `RespondentIdPanel` で調整できます。
 `RespondentIdScreenDialog` の子に `RespondentIdPanel` を置くとそのノードを優先して使用し、未配置の場合は `panel_scene`、さらに未設定の場合は標準の `respondent_id_panel.tscn` を使用します。
 
@@ -107,6 +111,7 @@ XR向けも `panel_scene` で `questionnaire_panel.tscn` の差し替えに対�
 
 `open()` は `spec.csv_output_directory` を参照し、CSV を Desktop / Downloads / Documents のいずれかへ出力します。未指定時は Desktop です。
 同名の CSV が存在する場合はヘッダを重複出力せず、末尾へ回答行を追記します。
+`spec.selected_stimulus_subdirectory` が設定されている場合、`stimulus_id` は `foldername/stimulus_id` 形式で出力されます。
 
 CSVヘッダ:
 

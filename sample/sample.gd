@@ -84,7 +84,7 @@ func _open_questionnaire(index: int) -> void:
 	)
 
 
-func _on_respondent_id_submitted(respondent_id: String) -> void:
+func _on_respondent_id_submitted(respondent_id: String, _selected_subdirectory: String) -> void:
 	_respondent_id = respondent_id
 	_answer_start_datetime = _get_current_datetime()
 	_current_index = 0
