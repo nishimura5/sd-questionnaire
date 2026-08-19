@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://chu7jowvouwr4"]
+
+[ext_resource type="Script" uid="uid://dnbc0bfdslwsn" path="res://sample/thumbnail_generator.gd" id="1_thumbnail"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_camera_adjustment_dummy"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="ThumbnailGenerator" type="Node3D" unique_id=990556340]
+script = ExtResource("1_thumbnail")
+
+[node name="CameraAdjustmentDummy" type="MeshInstance3D" parent="." unique_id=1564380217]
+mesh = SubResource("BoxMesh_camera_adjustment_dummy")
+
+[node name="ThumbnailViewport" type="SubViewport" parent="." unique_id=93957376]
+own_world_3d = true
+size = Vector2i(600, 600)
+msaa_3d = 2
+render_target_update_mode = 4
+
+[node name="MainCamera" type="Camera3D" parent="ThumbnailViewport" unique_id=2107766178]
+transform = Transform3D(0.6653606, -0.28353748, 0.6905807, -1.2484827e-08, 0.925064, 0.37981123, -0.7465221, -0.25271145, 0.61550117, 0.96034, 0.5552361, 0.8477191)
+current = true
+fov = 35.0
+
+[node name="ModelRoot" type="Node3D" parent="ThumbnailViewport" unique_id=1433468583]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="ThumbnailViewport" unique_id=1400232394]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.125205, 0)
+light_energy = 1.81
+light_size = 0.09
+
+[node name="SubdirectorySelection" type="CanvasLayer" parent="." unique_id=1884782766]
+
+[node name="Background" type="ColorRect" parent="SubdirectorySelection" unique_id=554873001]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.08, 0.08, 1)
+
+[node name="PanelContainer" type="PanelContainer" parent="SubdirectorySelection" unique_id=229771149]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -100.0
+offset_right = 260.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="SubdirectorySelection/PanelContainer" unique_id=1445668264]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubdirectorySelection/PanelContainer/MarginContainer" unique_id=488157590]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="SubdirectorySelection/PanelContainer/MarginContainer/VBoxContainer" unique_id=1244284897]
+layout_mode = 2
+text = "サムネイルを作成する刺激フォルダを選択してください。"
+horizontal_alignment = 1
+
+[node name="SubdirectorySelector" type="OptionButton" parent="SubdirectorySelection/PanelContainer/MarginContainer/VBoxContainer" unique_id=908556323]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GenerateButton" type="Button" parent="SubdirectorySelection/PanelContainer/MarginContainer/VBoxContainer" unique_id=252493562]
+unique_name_in_owner = true
+layout_mode = 2
+text = "サムネイルを作成"

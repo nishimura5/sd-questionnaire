@@ -52,6 +52,8 @@ GodotでSD法質問紙のデモを実行するためのサンプルプロジェ�
 
 `sample/desktop_sample.tscn`では、`assets/questionnaire_desktop.json`の`root_dir`に指定した外部ディレクトリからGLBファイルを読み込みます。初期設定は`~/Desktop`です。
 
+`sample/thumbnail_generator.tscn`を実行すると、`assets/questionnaire_desktop.json`に基づき、`desktop_sample.tscn`と同じ刺激の600x600 PNGサムネイルを一括生成します。`use_subdirectory`によるフォルダ選択が必要な場合は、起動後に対象フォルダを選択してください。画像は`csv_output_directory`で指定したディレクトリ内の`thumb`フォルダへ保存されます。ファイル名は刺激IDから末尾の`.glb`を除いた`<stimulus_id>.png`形式です（例: `001.glb`は`001.png`）。輪郭のジャギーを抑えるため、サムネイル用Viewportでは4x MSAAを使用します。処理完了後にシーンは自動終了します。カメラと光源は`thumbnail_generator.tscn`の`ThumbnailViewport`内で調整できます。
+
 ## questionnaire.jsonのルール
 
 `assets/questionnaire.json`は、表示する刺激、尺度の点数、形容詞対、ランダム化、CSV出力先を定義します。
